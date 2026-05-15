@@ -29,7 +29,10 @@ public class ReservaController {
     }
     @GetMapping
     public List<ReservaResponseDTO> listarReservasUsuario(
-            @RequestBody LoginRequestDTO usuario) {
+            @RequestParam String nombre,
+            @RequestParam String contrasena) {
+
+        LoginRequestDTO usuario = new LoginRequestDTO(nombre, contrasena);
 
         return reservaService.listarReservasUsuario(usuario);
     }
