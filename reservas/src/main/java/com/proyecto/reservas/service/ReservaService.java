@@ -72,7 +72,7 @@ public class ReservaService {
             nuevaReserva.setHabitacion(habitacionActual.get());
             nuevaReserva.setFechaInicio(reserva.getFechaInicio());
             nuevaReserva.setFechaFin(reserva.getFechaFin());
-            nuevaReserva.setEstado("Pendiente");
+            nuevaReserva.setEstado("PENDIENTE");
 
             reservaRepository.save(nuevaReserva);
 
@@ -105,7 +105,7 @@ public class ReservaService {
 
             Reserva reserva = reservaActual.get();
 
-            reserva.setEstado(estadoReserva.getEstado());
+            reserva.setEstado(estadoReserva.getEstado().trim().toUpperCase());
 
             reservaRepository.save(reserva);
 
@@ -182,6 +182,9 @@ public class ReservaService {
                 return new ArrayList<>();
             }
 
+            // <-- EXTRA: NORMALIZAR ESTADO
+            estado = estado.trim().toUpperCase();
+
             List<Reserva> reservasEstado =
                     reservaRepository.findByEstado(estado);
 
@@ -257,6 +260,15 @@ public class ReservaService {
                 .getHotel()
                 .getId()
                 .equals(idHotel);
+    }
+
+    public boolean usuarioTieneReservas(Integer idUsuario) {
+
+        if (idUsuario == null || idUsuario <= 0) {
+            return false;
+        }
+
+        return reservaRepository.existsByUsuarioId(idUsuario);
     }
 
 

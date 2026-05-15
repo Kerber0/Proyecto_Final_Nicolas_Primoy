@@ -18,4 +18,6 @@ public interface ReservaRepository  extends JpaRepository<Reserva,Integer> {
 
     List<Reserva> findAllByHabitacion_Id(Integer habitacionId);
 
+    boolean existsByUsuarioId(Integer usuarioId);
+
 }

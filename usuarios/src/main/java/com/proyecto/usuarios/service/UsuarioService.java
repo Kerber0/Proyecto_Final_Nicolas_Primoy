@@ -3,6 +3,7 @@ package com.proyecto.usuarios.service;
 import com.proyecto.usuarios.dto.LoginRequestDTO;
 import com.proyecto.usuarios.dto.UsuarioRequestDTO;
 import com.proyecto.usuarios.entity.Usuario;
+import com.proyecto.usuarios.client.ReservaClient;
 import com.proyecto.usuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private ReservaClient reservaClient;
 
     public String crearUsuario(UsuarioRequestDTO usuario) {
         try {
@@ -104,8 +107,13 @@ public class UsuarioService {
 
             if (!usuarios.isEmpty()) {
 
+                Usuario usuarioAEliminar = usuarios.getFirst();
 
-                usuarioRepository.delete(usuarios.getFirst());
+                if (reservaClient.usuarioTieneReservas(usuarioAEliminar.getId())) {
+                    return "NO SE PUEDE ELIMINAR EL USUARIO PORQUE TIENE RESERVAS";
+                }
+
+                usuarioRepository.delete(usuarioAEliminar);
 
                 return "USUARIO ELIMINADO CON EXITO";
             }

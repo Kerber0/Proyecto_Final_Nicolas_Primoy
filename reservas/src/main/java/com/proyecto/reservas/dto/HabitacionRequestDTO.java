@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class HabitacionRequestDTO {
         private Integer id;
         private Integer numeroHabitacion;
         private String tipo;
-        private Double precio;
+        private BigDecimal precio;
         private Integer hotelId;
         private boolean disponible;
 }

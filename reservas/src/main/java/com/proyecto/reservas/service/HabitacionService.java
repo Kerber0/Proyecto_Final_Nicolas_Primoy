@@ -5,9 +5,11 @@ import com.proyecto.reservas.entity.Habitacion;
 import com.proyecto.reservas.entity.Hotel;
 import com.proyecto.reservas.repository.HabitacionRepository;
 import com.proyecto.reservas.repository.HotelRepository;
+import com.proyecto.reservas.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -17,6 +19,8 @@ public class HabitacionService {
     private HabitacionRepository habitacionRepository;
     @Autowired
     private HotelRepository hotelRepository;
+    @Autowired
+    private ReservaRepository reservaRepository;
 
 
     public String crearHabitacion(HabitacionRequestDTO habitacion) {
@@ -108,6 +112,11 @@ public class HabitacionService {
             if (habitacionActual.isEmpty()) {
                 return "HABITACION NO ENCONTRADA";
             }
+
+            if (!reservaRepository.findAllByHabitacion_Id(id).isEmpty()) {
+                return "NO SE PUEDE ELIMINAR LA HABITACION PORQUE TIENE RESERVAS";
+            }
+
             habitacionRepository.delete(habitacionActual.get());
             return "HABITACION ELIMINADA CON EXITO";
 
@@ -132,7 +141,7 @@ public class HabitacionService {
                 || habitacion.getNumeroHabitacion() <= 0
 
                 || habitacion.getPrecio() == null
-                || habitacion.getPrecio() <= 0;
+                || habitacion.getPrecio().compareTo(BigDecimal.ZERO) <= 0;
     }
 
 

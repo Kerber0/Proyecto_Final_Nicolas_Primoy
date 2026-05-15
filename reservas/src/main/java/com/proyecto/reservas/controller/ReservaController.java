@@ -54,4 +54,10 @@ public class ReservaController {
         );
     }
 
+    @GetMapping("/usuario/{idUsuario}")
+    public boolean usuarioTieneReservas(@PathVariable Integer idUsuario) {
+
+        return reservaService.usuarioTieneReservas(idUsuario);
+    }
+
 }

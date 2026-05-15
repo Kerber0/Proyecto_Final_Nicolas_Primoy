@@ -5,6 +5,7 @@ import com.proyecto.reservas.entity.Habitacion;
 import com.proyecto.reservas.entity.Hotel;
 import com.proyecto.reservas.repository.HabitacionRepository;
 import com.proyecto.reservas.repository.HotelRepository;
+import com.proyecto.reservas.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class HotelService {
     private HotelRepository hotelRepository;
     @Autowired
     private HabitacionRepository habitacionRepository;
+    @Autowired
+    private ReservaRepository reservaRepository;
 
     public String crearHotel(HotelRequestDTO hotel) {
         try {
@@ -74,6 +77,12 @@ public class HotelService {
             }
 
             List<Habitacion> habitaciones = habitacionRepository.findAllByHotel_Id(id);
+
+            for (Habitacion habitacion : habitaciones) {
+                if (!reservaRepository.findAllByHabitacion_Id(habitacion.getId()).isEmpty()) {
+                    return "NO SE PUEDE ELIMINAR EL HOTEL PORQUE TIENE HABITACIONES CON RESERVAS";
+                }
+            }
 
             habitacionRepository.deleteAll(habitaciones);
 
