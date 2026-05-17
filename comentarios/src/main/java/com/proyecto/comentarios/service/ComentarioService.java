@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,7 +31,7 @@ public class ComentarioService {
     public ComentarioResponseDTO crearComentario(ComentarioRequestDTO request) {
 
         if (datosInvalidos(request)) {
-            return null;
+            throw new IllegalArgumentException("ERROR: TODOS LOS CAMPOS SON OBLIGATORIOS");
         }
 
         LoginRequestDTO login =
@@ -40,21 +41,21 @@ public class ComentarioService {
                 );
 
         if (!usuarioClient.validarUsuario(login)) {
-            return null;
+            throw new SecurityException("USUARIO NO VALIDO");
         }
 
         String usuarioIdString =
                 usuarioClient.obtenerIdUsuarioPorNombre(request.getNombre());
 
-        if (esNumeroValido(usuarioIdString)) {
-            return null;
+        if (!esNumeroValido(usuarioIdString)) {
+            throw new NoSuchElementException("USUARIO NO ENCONTRADO");
         }
 
         String hotelIdString =
                 reservaClient.obtenerIdApartirNombre(request.getNombreHotel());
 
-        if (esNumeroValido(hotelIdString)) {
-            return null;
+        if (!esNumeroValido(hotelIdString)) {
+            throw new NoSuchElementException("HOTEL NO ENCONTRADO");
         }
 
         Integer usuarioId = Integer.parseInt(usuarioIdString);
@@ -65,7 +66,7 @@ public class ComentarioService {
                 hotelId,
                 request.getReservaId()
         )) {
-            return null;
+            throw new IllegalStateException("LA RESERVA NO ES VALIDA PARA ESE USUARIO Y HOTEL");
         }
 
         Optional<Comentario> comentarioExistente =
@@ -76,7 +77,7 @@ public class ComentarioService {
                 );
 
         if (comentarioExistente.isPresent()) {
-            return null;
+            throw new IllegalStateException("YA EXISTE UN COMENTARIO PARA ESA RESERVA");
         }
 
         Comentario comentarioNuevo = new Comentario();
@@ -121,7 +122,7 @@ public class ComentarioService {
 
         String hotelIdString = reservaClient.obtenerIdApartirNombre(nombreHotel);
 
-        if (esNumeroValido(hotelIdString)) {
+        if (!esNumeroValido(hotelIdString)) {
             return new ArrayList<>();
         }
 
@@ -143,7 +144,7 @@ public class ComentarioService {
         String usuarioIdString =
                 usuarioClient.obtenerIdUsuarioPorNombre(login.getNombre());
 
-        if (esNumeroValido(usuarioIdString)) {
+        if (!esNumeroValido(usuarioIdString)) {
             return new ArrayList<>();
         }
 
@@ -241,14 +242,14 @@ public class ComentarioService {
     private boolean esNumeroValido(String valor) {
 
         if (valor == null || valor.isBlank()) {
-            return true;
+            return false;
         }
 
         try {
             Integer.parseInt(valor);
-            return false;
-        } catch (NumberFormatException e) {
             return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
