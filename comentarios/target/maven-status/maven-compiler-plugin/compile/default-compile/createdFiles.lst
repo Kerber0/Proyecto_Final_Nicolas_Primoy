@@ -1,9 +1,11 @@
-com\proyecto\comentarios\entity\Comentario.class
-com\proyecto\comentarios\dto\ComentarioResponseDTO.class
-com\proyecto\comentarios\client\ReservaClient.class
 com\proyecto\comentarios\dto\ComentarioRequestDTO.class
 com\proyecto\comentarios\service\ComentarioService.class
 com\proyecto\comentarios\repository\ComentarioRepository.class
 com\proyecto\comentarios\client\UsuarioClient.class
 com\proyecto\comentarios\dto\LoginRequestDTO.class
+com\proyecto\comentarios\entity\Comentario.class
+com\proyecto\comentarios\dto\ComentarioResponseDTO.class
+com\proyecto\comentarios\client\ReservaClient.class
+com\proyecto\comentarios\config\ComentarioDataLoader$1.class
+com\proyecto\comentarios\config\ComentarioDataLoader.class
 com\proyecto\comentarios\controller\ComentarioController.class
